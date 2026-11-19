@@ -1,0 +1,709 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Top 500 Verbs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Figtree:wght@400;500;600&family=Hind+Siliguri:wght@500;600&display=swap">
+<style>
+/* Layout: sticky-free single column shell, search + A–Z rail on top, responsive card grid of verb cards (emoji tile, V1/V2/V3 chips, three tense examples). */
+:root {
+  --bg: #f5f6fa;
+  --card: #ffffff;
+  --line: #e3e6ef;
+  --ink: #141b3a;
+  --muted: #5b6283;
+  --tile: #e6f3f0;
+  --bn: #0b8a68;
+  --mark: #ffe08a;
+  --rail: #dcdfeb;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bangla: "Hind Siliguri", "Noto Sans Bengali", "Kalpurush", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1424; --card: #171d33; --line: #2a3150; --ink: #eef0fa; --muted: #9aa2c4;
+    --tile: #1d2f31; --bn: #4fd1a5; --mark: #6b5a1c; --rail: #343c60;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1424; --card: #171d33; --line: #2a3150; --ink: #eef0fa; --muted: #9aa2c4;
+  --tile: #1d2f31; --bn: #4fd1a5; --mark: #6b5a1c; --rail: #343c60;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 15px; line-height: 1.4;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.shell { max-width: 1120px; margin: 0 auto; }
+.top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.search { flex: 1 1 280px; min-width: 0; }
+.search input {
+  width: 100%; height: 44px; padding: 0 18px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  font: inherit; font-family: var(--body);
+}
+.search input::placeholder { color: var(--muted); }
+.search input:focus-visible, .letters button:focus-visible, .more:focus-visible, .card:focus-visible {
+  outline: 2px solid var(--bn); outline-offset: 2px;
+}
+.count { color: var(--muted); font-size: 14px; font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.letters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.letters button {
+  width: 26px; height: 26px; border-radius: 6px; padding: 0;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  font: 500 12px var(--body); cursor: pointer;
+}
+.letters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.letters button:disabled { opacity: .35; cursor: default; }
+.grid {
+  display: grid; gap: 20px; margin-top: 26px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  padding: 20px; min-width: 0; display: flex; flex-direction: column;
+}
+.tile {
+  background: var(--tile); border-radius: 14px; height: 96px;
+  display: grid; place-items: center; font-size: 54px; line-height: 1;
+}
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 20px; }
+.head h2 { margin: 0; font: 700 30px/1.1 var(--display); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.num { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.bn { margin: 6px 0 0; font: 600 18px/1.35 var(--bangla); color: var(--bn); }
+.forms { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.forms span {
+  background: var(--tile); border-radius: 8px; padding: 5px 10px;
+  font-size: 13px; font-weight: 500;
+}
+.forms b { font-weight: 500; color: var(--muted); margin-right: 4px; }
+.ex { display: grid; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+.ex li { border-left: 3px solid var(--rail); padding-left: 12px; }
+.ex small { display: block; font-size: 12px; color: var(--muted); margin-bottom: 1px; }
+.ex p { margin: 0; font-size: 15px; line-height: 1.7; overflow-wrap: anywhere; }
+mark { background: var(--mark); color: inherit; border-radius: 6px; padding: 2px 6px; font-weight: 500; }
+.empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 48px 0; }
+.foot { display: flex; justify-content: center; margin-top: 28px; }
+.more {
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  border-radius: 999px; padding: 11px 26px; font: 600 14px var(--body); cursor: pointer;
+}
+.more:hover { border-color: var(--ink); }
+</style>
+
+<div class="shell">
+  <div class="top">
+    <div class="search"><input id="q" type="search" placeholder="Search in English or বাংলা" aria-label="Search verbs in English or Bangla" autocomplete="off"></div>
+    <div class="count" id="count" aria-live="polite"></div>
+  </div>
+  <div class="letters" id="letters" role="group" aria-label="Filter by first letter"></div>
+  <div class="grid" id="grid"></div>
+  <div class="foot"><button class="more" id="more" type="button" hidden>Show more verbs</button></div>
+</div>
+
+<script>
+// verb | V2 | V3 | Bangla | emoji | present | past | present perfect  (*word* marks the highlighted verb form)
+const RAW = `
+accept|accepted|accepted|গ্রহণ করা|🤝|I *accept* your invitation.|She *accepted* the gift yesterday.|They have *accepted* our offer.
+achieve|achieved|achieved|অর্জন করা|🏆|Hard work helps you *achieve* your goals.|He *achieved* the top score.|We have *achieved* great results.
+add|added|added|যোগ করা|➕|Please *add* some sugar.|She *added* two numbers.|I have *added* you to the group.
+agree|agreed|agreed|একমত হওয়া|👍|I *agree* with your idea.|He *agreed* to help us.|They have *agreed* on a price.
+allow|allowed|allowed|অনুমতি দেওয়া|✅|Our school does not *allow* phones.|Mom *allowed* me to go out.|They have *allowed* pets here.
+answer|answered|answered|উত্তর দেওয়া|💬|Please *answer* the question.|She *answered* the phone quickly.|I have *answered* all the questions.
+appear|appeared|appeared|দেখা দেওয়া|👀|Stars *appear* at night.|A cat *appeared* at the door.|The sun has *appeared* from behind the clouds.
+arrive|arrived|arrived|পৌঁছানো|🛬|Guests *arrive* at six.|The train *arrived* late.|We have *arrived* at the hotel.
+ask|asked|asked|জিজ্ঞাসা করা|🙋|I *ask* my teacher for help.|He *asked* me a question.|She has *asked* for directions.
+attend|attended|attended|উপস্থিত থাকা|🏫|Students *attend* class every day.|I *attended* the meeting yesterday.|They have *attended* the event.
+be|was / were|been|হওয়া|🙂|I want to *be* a doctor.|She *was* happy yesterday.|We have *been* friends for years.
+become|became|become|হয়ে ওঠা|🦋|Tadpoles *become* frogs.|He *became* a teacher.|She has *become* very tall.
+begin|began|begun|শুরু করা|🚦|Classes *begin* at nine.|The show *began* an hour ago.|The rain has *begun* to fall.
+believe|believed|believed|বিশ্বাস করা|🙏|I *believe* you.|She *believed* his story.|They have *believed* in us.
+bring|brought|brought|আনা|🎁|Please *bring* your book.|He *brought* a gift for me.|I have *brought* some water.
+build|built|built|নির্মাণ করা|🏗️|Workers *build* new roads.|They *built* a house last year.|We have *built* a small bridge.
+buy|bought|bought|কেনা|🛒|I *buy* fruit every week.|She *bought* a new bag.|They have *bought* a car.
+break|broke|broken|ভাঙা|💔|Don't *break* the glass.|He *broke* his phone.|I have *broken* my pencil.
+borrow|borrowed|borrowed|ধার করা|🤲|Can I *borrow* your pen?|She *borrowed* a book from me.|He has *borrowed* some money.
+brush|brushed|brushed|ব্রাশ করা|🪥|I *brush* my teeth twice a day.|She *brushed* her hair.|He has *brushed* his shoes.
+call|called|called|ডাকা / ফোন করা|📞|I *call* my mother every day.|He *called* me last night.|She has *called* the doctor.
+carry|carried|carried|বহন করা|🎒|Students *carry* heavy bags.|He *carried* the box upstairs.|She has *carried* it all day.
+catch|caught|caught|ধরা|🪝|Cats *catch* mice.|He *caught* the ball.|I have *caught* the early bus.
+change|changed|changed|পরিবর্তন করা|🔄|People *change* with time.|She *changed* her plan.|I have *changed* my mind.
+check|checked|checked|পরীক্ষা করা|🔍|Please *check* your answers.|He *checked* the time.|I have *checked* my bag.
+choose|chose|chosen|বেছে নেওয়া|🎯|You can *choose* any color.|She *chose* the red dress.|We have *chosen* a name.
+clean|cleaned|cleaned|পরিষ্কার করা|🧹|I *clean* my room on Fridays.|He *cleaned* the kitchen.|She has *cleaned* the windows.
+climb|climbed|climbed|আরোহণ করা|🧗|Kids *climb* trees.|He *climbed* the hill.|They have *climbed* the mountain.
+close|closed|closed|বন্ধ করা|🚪|Please *close* the door.|She *closed* the window.|The shop has *closed* for today.
+come|came|come|আসা|🚶|Please *come* here.|He *came* home early.|She has *come* from school.
+cook|cooked|cooked|রান্না করা|🍳|I *cook* dinner at home.|She *cooked* fish for us.|I have *cooked* rice.
+create|created|created|তৈরি করা|🎨|Artists *create* beautiful things.|He *created* a new website.|We have *created* a new plan.
+cut|cut|cut|কাটা|✂️|Please *cut* the paper.|He *cut* the cake.|I have *cut* the apple.
+cry|cried|cried|কাঁদা|😢|Babies *cry* when they are hungry.|She *cried* at the sad movie.|He has *cried* all morning.
+dance|danced|danced|নাচা|💃|They *dance* at weddings.|She *danced* all night.|I have *danced* with her.
+decide|decided|decided|সিদ্ধান্ত নেওয়া|🤔|I *decide* quickly.|He *decided* to stay home.|We have *decided* to travel.
+die|died|died|মারা যাওয়া|🥀|Flowers *die* without water.|The plant *died* last week.|The fire has *died* down.
+do|did|done|করা|✔️|I *do* my homework daily.|She *did* her best.|I have *done* my work.
+draw|drew|drawn|আঁকা|✏️|I *draw* a picture every day.|He *drew* a cat.|She has *drawn* a map.
+dream|dreamed|dreamed|স্বপ্ন দেখা|🌙|I *dream* about flying.|She *dreamed* of becoming a pilot.|He has *dreamed* of this trip.
+drink|drank|drunk|পান করা|🥤|I *drink* water every morning.|He *drank* a glass of milk.|She has *drunk* all the tea.
+drive|drove|driven|চালানো|🚗|We *drive* to the city.|He *drove* the car slowly.|She has *driven* for hours.
+drop|dropped|dropped|ফেলে দেওয়া|💧|Don't *drop* the cup.|He *dropped* his keys.|I have *dropped* my phone.
+deliver|delivered|delivered|সরবরাহ করা|📦|They *deliver* food to homes.|He *delivered* the parcel today.|We have *delivered* your order.
+eat|ate|eaten|খাওয়া|🍽️|We *eat* rice every day.|He *ate* an apple.|She has *eaten* lunch.
+end|ended|ended|শেষ করা|🔚|Let's *end* the game.|The movie *ended* at ten.|The match has *ended*.
+enjoy|enjoyed|enjoyed|উপভোগ করা|😄|I *enjoy* music.|She *enjoyed* the party.|We have *enjoyed* the trip.
+enter|entered|entered|প্রবেশ করা|🔑|Please *enter* the room.|He *entered* the hall quietly.|They have *entered* the building.
+escape|escaped|escaped|পালানো|🏃|Many animals *escape* from danger.|The bird *escaped* from the cage.|He has *escaped* the rain.
+explain|explained|explained|ব্যাখ্যা করা|🧑‍🏫|Teachers *explain* the lesson.|He *explained* the rule.|She has *explained* it twice.
+fall|fell|fallen|পড়ে যাওয়া|🍂|Leaves *fall* in autumn.|He *fell* off his bike.|Snow has *fallen* overnight.
+feel|felt|felt|অনুভব করা|💛|I *feel* happy today.|She *felt* tired after work.|I have *felt* better since morning.
+fight|fought|fought|লড়াই করা|🥊|Boxers *fight* in a ring.|They *fought* for the title.|He has *fought* hard.
+fill|filled|filled|পূর্ণ করা|🪣|Please *fill* the bottle.|She *filled* the glass with juice.|I have *filled* the form.
+find|found|found|খুঁজে পাওয়া|🔎|I *find* math easy.|He *found* his keys.|We have *found* a solution.
+finish|finished|finished|শেষ করা|🎬|I *finish* work at five.|She *finished* her homework.|They have *finished* dinner.
+fly|flew|flown|উড়া|✈️|Birds *fly* in the sky.|The plane *flew* over the city.|She has *flown* to Dubai.
+forget|forgot|forgotten|ভুলে যাওয়া|🤯|Don't *forget* your umbrella.|He *forgot* my name.|I have *forgotten* the password.
+forgive|forgave|forgiven|ক্ষমা করা|🕊️|I *forgive* you.|She *forgave* her friend.|He has *forgiven* us.
+follow|followed|followed|অনুসরণ করা|👣|Please *follow* me.|The dog *followed* him home.|I have *followed* the rules.
+fix|fixed|fixed|ঠিক করা|🔧|He can *fix* bikes.|She *fixed* the broken chair.|I have *fixed* the tap.
+get|got|got|পাওয়া|📥|I *get* up at six.|She *got* a gift.|He has *got* a new job.
+give|gave|given|দেওয়া|🎀|Please *give* me a pen.|He *gave* her a book.|I have *given* him the key.
+go|went|gone|যাওয়া|🚌|I *go* to school by bus.|She *went* to the market.|They have *gone* home.
+grow|grew|grown|বেড়ে ওঠা|🌱|Plants *grow* in sunlight.|He *grew* tall.|The tree has *grown* big.
+guess|guessed|guessed|অনুমান করা|🎲|Can you *guess* the answer?|She *guessed* right.|I have *guessed* the word.
+greet|greeted|greeted|শুভেচ্ছা জানানো|👋|We *greet* guests with a smile.|He *greeted* his teacher.|She has *greeted* everyone.
+happen|happened|happened|ঘটা|💥|Accidents can *happen*.|What *happened* yesterday?|Nothing has *happened*.
+hate|hated|hated|ঘৃণা করা|😠|I *hate* noise.|She *hated* the cold weather.|He has *hated* spiders since childhood.
+have|had|had|আছে / থাকা|👜|I *have* a red bag.|She *had* a small dog.|They have *had* lunch.
+hear|heard|heard|শোনা|👂|I *hear* birds singing.|She *heard* a loud noise.|I have *heard* this song before.
+help|helped|helped|সাহায্য করা|🙌|Friends *help* each other.|He *helped* me with homework.|She has *helped* us a lot.
+hide|hid|hidden|লুকানো|🙈|Cats *hide* under the bed.|He *hid* the gift.|She has *hidden* the keys.
+hit|hit|hit|আঘাত করা|🏏|Players *hit* the ball.|He *hit* the nail.|I have *hit* my knee.
+hold|held|held|ধরে রাখা|🤚|Please *hold* my bag.|She *held* my hand.|He has *held* the door open.
+hope|hoped|hoped|আশা করা|🌈|I *hope* you win.|She *hoped* for good news.|We have *hoped* for rain.
+hurry|hurried|hurried|তাড়াহুড়ো করা|⏩|We must *hurry*.|He *hurried* to the station.|She has *hurried* home.
+hurt|hurt|hurt|ব্যথা দেওয়া|🩹|Don't *hurt* animals.|He *hurt* his leg.|I have *hurt* my finger.
+imagine|imagined|imagined|কল্পনা করা|🌌|I *imagine* a big garden.|She *imagined* a magic world.|I have *imagined* this day.
+improve|improved|improved|উন্নতি করা|📈|Practice will *improve* your English.|He *improved* his grades.|She has *improved* a lot.
+include|included|included|অন্তর্ভুক্ত করা|📎|Please *include* my name.|They *included* everyone.|We have *included* a map.
+invite|invited|invited|আমন্ত্রণ জানানো|💌|I *invite* my friends home.|She *invited* us to dinner.|They have *invited* the whole class.
+increase|increased|increased|বৃদ্ধি করা|📊|Prices *increase* every year.|They *increased* the speed.|Sales have *increased* this month.
+join|joined|joined|যোগ দেওয়া|🔗|Please *join* us.|He *joined* the club.|She has *joined* a new school.
+jump|jumped|jumped|লাফানো|🦘|Kids *jump* on the bed.|The cat *jumped* off the wall.|He has *jumped* over the fence.
+joke|joked|joked|মজা করা|😜|I *joke* with my friends.|She *joked* about the weather.|He has *joked* all day.
+judge|judged|judged|বিচার করা|⚖️|Don't *judge* a book by its cover.|The referee *judged* the match.|She has *judged* the contest.
+keep|kept|kept|রাখা|🗃️|Please *keep* it safe.|He *kept* the secret.|I have *kept* your book.
+kick|kicked|kicked|লাথি মারা|⚽|Players *kick* the ball.|He *kicked* the ball hard.|She has *kicked* a goal.
+kiss|kissed|kissed|চুমু খাওয়া|😘|Mothers *kiss* their babies.|She *kissed* her son goodbye.|He has *kissed* his mother.
+knock|knocked|knocked|কড়া নাড়া|✊|Please *knock* before you enter.|He *knocked* on the door.|Someone has *knocked* twice.
+know|knew|known|জানা|🧠|I *know* the answer.|She *knew* him well.|We have *known* each other for years.
+laugh|laughed|laughed|হাসা|😂|We *laugh* at funny jokes.|He *laughed* loudly.|She has *laughed* all evening.
+learn|learned|learned|শেখা|📚|I *learn* English every day.|She *learned* to swim last summer.|He has *learned* a new skill.
+leave|left|left|ত্যাগ করা|🧳|I *leave* home at eight.|She *left* early.|They have *left* already.
+lend|lent|lent|ধার দেওয়া|🪙|I *lend* books to my friends.|He *lent* me his pen.|She has *lent* me some money.
+let|let|let|দেওয়া / অনুমতি দেওয়া|🔓|Please *let* me go.|He *let* the dog out.|I have *let* her know.
+lift|lifted|lifted|তোলা|🏋️|I can *lift* this box.|He *lifted* the bag.|She has *lifted* the heavy stone.
+like|liked|liked|পছন্দ করা|❤️|I *like* mangoes.|She *liked* the movie.|He has *liked* football since childhood.
+listen|listened|listened|মনোযোগ দিয়ে শোনা|🎧|Please *listen* carefully.|He *listened* to the radio.|I have *listened* to this song.
+live|lived|lived|বাস করা|🏠|We *live* in Dhaka.|She *lived* in London for years.|They have *lived* here since 2020.
+look|looked|looked|তাকানো|🕶️|Please *look* at the board.|He *looked* out the window.|I have *looked* everywhere.
+lose|lost|lost|হারানো|🙁|Don't *lose* your keys.|She *lost* her wallet.|We have *lost* the game.
+love|loved|loved|ভালোবাসা|💖|I *love* my family.|He *loved* his old school.|She has *loved* music since she was a child.
+lead|led|led|নেতৃত্ব দেওয়া|🧭|A good captain can *lead* the team.|She *led* the group.|He has *led* the class for a year.
+make|made|made|বানানো|🛠️|I *make* tea every morning.|She *made* a cake.|They have *made* a plan.
+mean|meant|meant|বোঝানো|❓|What does this word *mean*?|She *meant* to call you.|I have *meant* to tell you.
+meet|met|met|দেখা করা|🧑‍🤝‍🧑|I *meet* my friends on Fridays.|We *met* at the park.|I have *met* her before.
+miss|missed|missed|মিস করা|🚏|I *miss* my old school.|He *missed* the bus.|She has *missed* the class.
+move|moved|moved|সরানো / নড়া|🚚|Please *move* the chair.|They *moved* to a new city.|He has *moved* the table.
+mix|mixed|mixed|মেশানো|🥣|I *mix* milk and sugar.|She *mixed* the colors.|He has *mixed* the flour and eggs.
+need|needed|needed|প্রয়োজন হওয়া|🆘|I *need* some water.|She *needed* help.|We have *needed* this for weeks.
+notice|noticed|noticed|লক্ষ্য করা|🧐|I *notice* small things.|He *noticed* a mistake.|She has *noticed* the change.
+name|named|named|নাম দেওয়া|🏷️|We *name* our dog Tom.|She *named* her cat Mini.|They have *named* the baby Ayan.
+obey|obeyed|obeyed|মান্য করা|🚥|Drivers must *obey* the rules.|He *obeyed* his parents.|She has *obeyed* the signal.
+offer|offered|offered|প্রস্তাব দেওয়া|🛍️|Shops *offer* big discounts.|He *offered* me a seat.|They have *offered* me a job.
+open|opened|opened|খোলা|📖|Please *open* the window.|She *opened* the box.|He has *opened* a shop.
+order|ordered|ordered|অর্ডার করা|🧾|I *order* food online.|She *ordered* a pizza.|We have *ordered* lunch.
+own|owned|owned|মালিক হওয়া|🏡|We *own* a small farm.|He *owned* a bike.|She has *owned* this shop for years.
+paint|painted|painted|রং করা|🖌️|I *paint* flowers.|He *painted* the wall.|She has *painted* a beautiful picture.
+pass|passed|passed|পাশ করা / এগিয়ে দেওয়া|🏅|Please *pass* the salt.|He *passed* the exam.|She has *passed* the test.
+pay|paid|paid|পরিশোধ করা|💵|I *pay* the bill online.|He *paid* the money.|She has *paid* the rent.
+plan|planned|planned|পরিকল্পনা করা|🗺️|We *plan* a trip every year.|She *planned* the party.|They have *planned* everything.
+play|played|played|খেলা|🎮|Children *play* in the park.|He *played* cricket yesterday.|We have *played* all day.
+pull|pulled|pulled|টানা|🪢|Please *pull* the door.|He *pulled* the rope.|She has *pulled* the chair.
+push|pushed|pushed|ঠেলা|👉|Please *push* the door.|He *pushed* the cart.|She has *pushed* the button.
+put|put|put|রাখা|📍|I *put* my bag on the table.|She *put* the book away.|He has *put* the keys in the drawer.
+prepare|prepared|prepared|প্রস্তুত করা|📝|I *prepare* breakfast.|She *prepared* for the exam.|We have *prepared* the room.
+promise|promised|promised|প্রতিজ্ঞা করা|🤞|I *promise* to come.|He *promised* to help.|She has *promised* me a gift.
+protect|protected|protected|রক্ষা করা|🛡️|Helmets *protect* your head.|He *protected* the children.|We have *protected* the forest.
+practice|practiced|practiced|অনুশীলন করা|🎹|I *practice* English daily.|She *practiced* the piano.|He has *practiced* all week.
+quit|quit|quit|ছেড়ে দেওয়া|🚫|Don't *quit* now.|He *quit* his job.|She has *quit* the club.
+reach|reached|reached|পৌঁছানো|🏔️|I can *reach* the shelf.|He *reached* the top.|They have *reached* home.
+read|read|read|পড়া|📰|I *read* a book every week.|She *read* a story yesterday.|He has *read* this book twice.
+receive|received|received|গ্রহণ করা / পাওয়া|📬|We *receive* letters by post.|She *received* a gift.|I have *received* your message.
+relax|relaxed|relaxed|আরাম করা|🛋️|I *relax* on weekends.|She *relaxed* by the lake.|He has *relaxed* all day.
+remember|remembered|remembered|মনে রাখা|🧩|I *remember* his name.|She *remembered* the date.|We have *remembered* everything.
+remove|removed|removed|সরিয়ে ফেলা|🗑️|Please *remove* your shoes.|He *removed* the old poster.|She has *removed* the stain.
+repeat|repeated|repeated|পুনরাবৃত্তি করা|🔁|Please *repeat* the sentence.|He *repeated* the question.|I have *repeated* it twice.
+reply|replied|replied|জবাব দেওয়া|↩️|I *reply* to every message.|She *replied* quickly.|He has *replied* to my email.
+return|returned|returned|ফিরে আসা / ফেরত দেওয়া|🔙|I *return* home at five.|He *returned* the book.|She has *returned* from Dhaka.
+ride|rode|ridden|চড়া|🚲|I *ride* a bicycle.|He *rode* a horse.|She has *ridden* a camel.
+ring|rang|rung|বাজা|🔔|Bells *ring* in the morning.|The phone *rang* twice.|The bell has *rung*.
+rise|rose|risen|ওঠা|🌅|The moon will *rise* soon.|The sun *rose* at six.|The water has *risen*.
+run|ran|run|দৌড়ানো|👟|I *run* every morning.|He *ran* to the bus.|She has *run* five miles.
+rest|rested|rested|বিশ্রাম নেওয়া|🌴|I *rest* after lunch.|She *rested* for an hour.|He has *rested* enough.
+save|saved|saved|সংরক্ষণ করা / বাঁচানো|💾|I *save* money every month.|He *saved* the file.|She has *saved* the photos.
+say|said|said|বলা|🗣️|People *say* it is true.|She *said* hello.|He has *said* sorry.
+see|saw|seen|দেখা|🔭|I *see* a bird.|She *saw* a movie.|I have *seen* this place.
+sell|sold|sold|বিক্রি করা|🏪|Shops *sell* fruits.|He *sold* his old bike.|She has *sold* all the books.
+send|sent|sent|পাঠানো|📤|I *send* messages to friends.|He *sent* a letter.|She has *sent* the email.
+set|set|set|স্থাপন করা / ঠিক করা|🗓️|I *set* an alarm every night.|She *set* the table.|He has *set* a new record.
+share|shared|shared|ভাগ করা|🍰|We *share* our toys.|She *shared* her lunch.|He has *shared* the news.
+shine|shone|shone|জ্বলজ্বল করা|☀️|Stars *shine* at night.|The sun *shone* all day.|The sun has *shone* all morning.
+shout|shouted|shouted|চিৎকার করা|📢|Don't *shout* in class.|He *shouted* for help.|She has *shouted* my name.
+show|showed|shown|দেখানো|🖼️|Please *show* me your ticket.|He *showed* us the photos.|She has *shown* me the way.
+shut|shut|shut|বন্ধ করা|🔒|Please *shut* the gate.|He *shut* the book.|She has *shut* the shop.
+sing|sang|sung|গান গাওয়া|🎤|Birds *sing* in the morning.|She *sang* a lovely song.|He has *sung* on stage.
+sit|sat|sat|বসা|🪑|Please *sit* down.|He *sat* near me.|She has *sat* here for an hour.
+sleep|slept|slept|ঘুমানো|💤|I *sleep* at ten.|The baby *slept* well.|He has *slept* since noon.
+smile|smiled|smiled|মুচকি হাসা|😊|I *smile* at everyone.|She *smiled* at me.|He has *smiled* all day.
+speak|spoke|spoken|কথা বলা|🎙️|I *speak* English with friends.|She *spoke* softly.|He has *spoken* to the teacher.
+spend|spent|spent|খরচ করা|💰|We *spend* money on food.|He *spent* an hour reading.|She has *spent* all her money.
+stand|stood|stood|দাঁড়ানো|🧍|Please *stand* up.|He *stood* in the line.|She has *stood* there for hours.
+start|started|started|শুরু করা|▶️|Classes *start* at nine.|He *started* a new job.|It has *started* to rain.
+stay|stayed|stayed|থাকা|🛏️|I *stay* at home on Fridays.|She *stayed* with her aunt.|We have *stayed* here for a week.
+steal|stole|stolen|চুরি করা|🥷|Thieves *steal* things.|He *stole* a bike.|Someone has *stolen* my bag.
+stop|stopped|stopped|থামা|🛑|Please *stop* the car.|The rain *stopped*.|He has *stopped* the music.
+study|studied|studied|পড়াশোনা করা|🎓|I *study* at night.|She *studied* hard.|He has *studied* for two hours.
+swim|swam|swum|সাঁতার কাটা|🏊|I *swim* in the river.|He *swam* across the lake.|She has *swum* every day.
+switch|switched|switched|বদলানো / চালু-বন্ধ করা|🔀|Please *switch* off the light.|He *switched* on the fan.|She has *switched* schools.
+take|took|taken|নেওয়া|✋|I *take* a bus to work.|She *took* a photo.|He has *taken* my book.
+talk|talked|talked|আলাপ করা|🗨️|We *talk* every night.|She *talked* to her friend.|He has *talked* to the manager.
+teach|taught|taught|শেখানো|👩‍🏫|I *teach* English.|He *taught* us math.|She has *taught* for ten years.
+tell|told|told|বলা / জানানো|🪧|I *tell* the truth.|He *told* me a story.|She has *told* everyone.
+think|thought|thought|ভাবা|💭|I *think* before I speak.|She *thought* about it.|He has *thought* of a plan.
+throw|threw|thrown|ছুড়ে ফেলা|🥎|Please *throw* the ball.|He *threw* a stone.|She has *thrown* the paper away.
+touch|touched|touched|স্পর্শ করা|☝️|Don't *touch* the fire.|She *touched* the flower.|He has *touched* the wall.
+travel|traveled|traveled|ভ্রমণ করা|🌍|We *travel* every summer.|She *traveled* to Japan.|He has *traveled* a lot.
+try|tried|tried|চেষ্টা করা|💪|I *try* my best.|She *tried* a new dish.|He has *tried* many times.
+turn|turned|turned|ঘোরা / মোড় নেওয়া|↪️|Please *turn* left.|He *turned* the page.|She has *turned* off the light.
+understand|understood|understood|বোঝা|💡|I *understand* the lesson.|She *understood* the question.|We have *understood* the rule.
+use|used|used|ব্যবহার করা|🔨|I *use* a pen to write.|He *used* my phone.|She has *used* this app.
+update|updated|updated|হালনাগাদ করা|🔃|I *update* my phone often.|He *updated* the app.|She has *updated* her profile.
+visit|visited|visited|ঘুরতে যাওয়া|🏛️|We *visit* our grandparents.|She *visited* Cox's Bazar.|They have *visited* the museum.
+vote|voted|voted|ভোট দেওয়া|🗳️|Citizens *vote* every five years.|He *voted* yesterday.|She has *voted* already.
+wait|waited|waited|অপেক্ষা করা|⏳|Please *wait* here.|He *waited* for an hour.|I have *waited* since morning.
+wake|woke|woken|জাগা|⏰|I *wake* up at six.|She *woke* early.|He has *woken* up.
+walk|walked|walked|হাঁটা|🚶‍♂️|I *walk* to school.|He *walked* home.|She has *walked* a long way.
+want|wanted|wanted|চাওয়া|🤩|I *want* some water.|She *wanted* a new bag.|He has *wanted* this toy.
+wash|washed|washed|ধোয়া|🧼|I *wash* my hands.|She *washed* the clothes.|He has *washed* the car.
+watch|watched|watched|দেখা|📺|We *watch* TV at night.|She *watched* a film.|He has *watched* this show.
+wear|wore|worn|পরিধান করা|👕|I *wear* a uniform.|She *wore* a blue dress.|He has *worn* this shirt.
+win|won|won|জেতা|🥇|Our team will *win*.|She *won* the race.|They have *won* the cup.
+wish|wished|wished|কামনা করা|🌠|I *wish* you luck.|She *wished* for a gift.|He has *wished* me well.
+work|worked|worked|কাজ করা|💼|I *work* in an office.|She *worked* late.|He has *worked* here for years.
+worry|worried|worried|চিন্তা করা|😰|Don't *worry*.|She *worried* about the exam.|He has *worried* all day.
+write|wrote|written|লেখা|✍️|I *write* in my diary.|He *wrote* a letter.|She has *written* a story.
+wonder|wondered|wondered|ভাবতে থাকা|🤷|I *wonder* why the sky is blue.|She *wondered* where he went.|I have *wondered* about it.
+yell|yelled|yelled|চেঁচানো|🗯️|Don't *yell* at me.|He *yelled* for help.|She has *yelled* all morning.
+act|acted|acted|অভিনয় করা|🎭|Actors *act* on stage.|He *acted* in a school play.|She has *acted* very bravely.
+admire|admired|admired|প্রশংসা করা|🌟|I *admire* my teacher.|She *admired* the view.|We have *admired* his work.
+advise|advised|advised|পরামর্শ দেওয়া|💁|Doctors *advise* us to sleep early.|He *advised* me to wait.|She has *advised* us well.
+afford|afforded|afforded|সামর্থ্য থাকা|💳|I can *afford* this phone.|They *afforded* a small house.|They have *afforded* a new car.
+announce|announced|announced|ঘোষণা করা|📣|They *announce* the results today.|The teacher *announced* the news.|He has *announced* his plan.
+apologize|apologized|apologized|ক্ষমা চাওয়া|🙇|I *apologize* for being late.|She *apologized* to her friend.|He has *apologized* already.
+apply|applied|applied|আবেদন করা|📄|I *apply* for jobs online.|She *applied* for a visa.|He has *applied* to a university.
+approve|approved|approved|অনুমোদন করা|👌|The manager will *approve* the plan.|They *approved* the plan.|She has *approved* my leave.
+argue|argued|argued|তর্ক করা|💢|Don't *argue* with your brother.|They *argued* about money.|He has *argued* all morning.
+arrange|arranged|arranged|সাজানো / ব্যবস্থা করা|🗂️|I *arrange* my books neatly.|She *arranged* the flowers.|They have *arranged* a meeting.
+attract|attracted|attracted|আকর্ষণ করা|🧲|Magnets *attract* iron.|The shop *attracted* many people.|The festival has *attracted* tourists.
+avoid|avoided|avoided|এড়িয়ে চলা|🚧|Please *avoid* the traffic.|He *avoided* the puddle.|She has *avoided* sugar.
+attach|attached|attached|সংযুক্ত করা|🖇️|I *attach* a file to my email.|She *attached* a photo.|He has *attached* the form.
+assist|assisted|assisted|সহায়তা করা|🦺|Nurses *assist* doctors.|He *assisted* the teacher.|She has *assisted* many students.
+bake|baked|baked|সেঁকা|🥖|I *bake* bread on Sundays.|She *baked* a cake.|He has *baked* cookies.
+bark|barked|barked|ঘেউ ঘেউ করা|🐕|Dogs *bark* at strangers.|The dog *barked* all night.|It has *barked* twice.
+beat|beat|beaten|হারানো / পেটানো|🥁|Our team can *beat* them.|She *beat* him at chess.|They have *beaten* the champions.
+beg|begged|begged|মিনতি করা / ভিক্ষা চাওয়া|🥺|Dogs *beg* for food.|He *begged* for help.|She has *begged* me to stay.
+behave|behaved|behaved|আচরণ করা|😇|Please *behave* yourself.|The children *behaved* well.|He has *behaved* badly.
+belong|belonged|belonged|অন্তর্ভুক্ত হওয়া / মালিকানাধীন হওয়া|🔖|These shoes *belong* to me.|The bag *belonged* to my sister.|The land has *belonged* to us for years.
+bend|bent|bent|বাঁকানো|🤸|Please *bend* your knees.|He *bent* the wire.|She has *bent* the rod.
+bite|bit|bitten|কামড়ানো|🦷|Mosquitoes *bite* at night.|A mosquito *bit* me.|He has *bitten* his nails.
+blow|blew|blown|ফুঁ দেওয়া / বওয়া|💨|The wind can *blow* hard.|He *blew* out the candles.|The storm has *blown* the roof away.
+boil|boiled|boiled|ফোটানো|♨️|I *boil* water for tea.|She *boiled* the eggs.|He has *boiled* the rice.
+burn|burned|burned|পোড়া|🔥|Wood can *burn* quickly.|She *burned* the toast.|He has *burned* his finger.
+bury|buried|buried|মাটিতে পুঁতে রাখা|🪦|Dogs *bury* bones.|He *buried* the treasure.|She has *buried* the seeds.
+bounce|bounced|bounced|লাফিয়ে ওঠা|🏀|Rubber balls *bounce* high.|He *bounced* the ball.|It has *bounced* twice.
+bless|blessed|blessed|আশীর্বাদ করা|✨|May God *bless* you.|The priest *blessed* the couple.|She has *blessed* us all.
+breathe|breathed|breathed|শ্বাস নেওয়া|🌬️|We *breathe* through our nose.|She *breathed* deeply.|He has *breathed* fresh air.
+bow|bowed|bowed|মাথা নত করা|🙇‍♂️|Players *bow* to the crowd.|He *bowed* to the king.|She has *bowed* her head.
+calculate|calculated|calculated|হিসাব করা|🧮|I *calculate* the total cost.|She *calculated* the marks.|He has *calculated* the answer.
+cancel|canceled|canceled|বাতিল করা|❌|They *cancel* the trip.|The school *canceled* the class.|She has *canceled* her order.
+care|cared|cared|যত্ন নেওয়া|💞|I *care* about my friends.|She *cared* for her sick mother.|He has *cared* for the plants.
+celebrate|celebrated|celebrated|উদযাপন করা|🎉|We *celebrate* Eid with family.|They *celebrated* his birthday.|She has *celebrated* her win.
+chase|chased|chased|তাড়া করা|🐈|Cats *chase* mice.|The dog *chased* the cat.|He has *chased* the bus.
+chat|chatted|chatted|গল্প করা|☕|We *chat* after class.|She *chatted* with her friend.|They have *chatted* for an hour.
+cheat|cheated|cheated|ঠকানো|🃏|Don't *cheat* in exams.|He *cheated* at cards.|She has *cheated* me.
+cheer|cheered|cheered|উল্লাস করা|🥳|Fans *cheer* for their team.|The crowd *cheered* loudly.|She has *cheered* all match.
+clap|clapped|clapped|হাততালি দেওয়া|👏|We *clap* after the song.|They *clapped* for him.|She has *clapped* her hands.
+collect|collected|collected|সংগ্রহ করা|🧺|I *collect* stamps.|She *collected* shells.|He has *collected* old coins.
+compare|compared|compared|তুলনা করা|🆚|Please *compare* the two prices.|He *compared* the answers.|She has *compared* both phones.
+complain|complained|complained|অভিযোগ করা|😤|People *complain* about the noise.|He *complained* to the manager.|She has *complained* twice.
+complete|completed|completed|সম্পূর্ণ করা|☑️|I *complete* my work on time.|She *completed* the course.|He has *completed* the task.
+connect|connected|connected|সংযুক্ত করা|🔌|Please *connect* to Wi-Fi.|He *connected* the cable.|She has *connected* the phone.
+consider|considered|considered|বিবেচনা করা|🤨|I *consider* him a friend.|She *considered* the offer.|We have *considered* all options.
+continue|continued|continued|চালিয়ে যাওয়া|⏭️|Please *continue* reading.|He *continued* his journey.|She has *continued* her studies.
+copy|copied|copied|অনুলিপি করা|📋|I *copy* notes from the board.|He *copied* the file.|She has *copied* the text.
+cost|cost|cost|খরচ হওয়া / দাম হওয়া|💲|Books *cost* money.|The ticket *cost* ten dollars.|It has *cost* me a lot.
+count|counted|counted|গণনা করা|🔢|I *count* from one to ten.|She *counted* the coins.|He has *counted* the money.
+cover|covered|covered|ঢাকা|🧥|Please *cover* the food.|She *covered* the baby with a blanket.|He has *covered* the table.
+cross|crossed|crossed|পার হওয়া|🛣️|We *cross* the road carefully.|He *crossed* the river.|She has *crossed* the bridge.
+crawl|crawled|crawled|হামাগুড়ি দেওয়া|🐛|Babies *crawl* before they walk.|The snake *crawled* away.|The baby has *crawled* across the room.
+chop|chopped|chopped|কুচি করা|🔪|I *chop* onions.|She *chopped* the carrots.|He has *chopped* the wood.
+compete|competed|competed|প্রতিযোগিতা করা|🥈|Teams *compete* for the cup.|She *competed* in the race.|He has *competed* in many contests.
+correct|corrected|corrected|সংশোধন করা|🖍️|Please *correct* your mistakes.|The teacher *corrected* the papers.|She has *corrected* the spelling.
+cough|coughed|coughed|কাশি দেওয়া|🤧|Please *cough* into your elbow.|He *coughed* all night.|She has *coughed* since morning.
+damage|damaged|damaged|ক্ষতি করা|🌪️|Storms can *damage* houses.|He *damaged* the car.|The rain has *damaged* the crops.
+dare|dared|dared|সাহস করা|🦁|I *dare* you to jump.|He *dared* to speak.|She has *dared* to try.
+deal|dealt|dealt|মোকাবিলা করা / কারবার করা|📇|Shops *deal* in clothes.|She *dealt* with the problem.|He has *dealt* with many customers.
+demand|demanded|demanded|দাবি করা|📜|Workers *demand* fair pay.|He *demanded* an answer.|They have *demanded* a refund.
+deny|denied|denied|অস্বীকার করা|🙅|Don't *deny* the truth.|He *denied* the story.|She has *denied* everything.
+depend|depended|depended|নির্ভর করা|🧷|Children *depend* on their parents.|She *depended* on her friend.|We have *depended* on him for years.
+describe|described|described|বর্ণনা করা|🗒️|Please *describe* the picture.|He *described* the house.|She has *described* the scene.
+design|designed|designed|নকশা করা|📐|I *design* posters.|She *designed* a logo.|He has *designed* a house.
+destroy|destroyed|destroyed|ধ্বংস করা|💣|Floods *destroy* crops.|The fire *destroyed* the shop.|They have *destroyed* the old building.
+develop|developed|developed|বিকশিত করা|🧪|Reading can *develop* your mind.|They *developed* a new app.|She has *developed* a new skill.
+dig|dug|dug|খোঁড়া|⛏️|Dogs *dig* holes.|He *dug* a deep hole.|They have *dug* a well.
+disagree|disagreed|disagreed|দ্বিমত করা|👎|I *disagree* with him.|She *disagreed* with the plan.|They have *disagreed* before.
+disappear|disappeared|disappeared|অদৃশ্য হওয়া|🫥|Stars *disappear* in the morning.|The cat *disappeared* behind the wall.|My keys have *disappeared*.
+discover|discovered|discovered|আবিষ্কার করা|🔬|Scientists *discover* new things.|He *discovered* a cave.|She has *discovered* a new path.
+discuss|discussed|discussed|আলোচনা করা|👥|We *discuss* the news.|They *discussed* the plan.|She has *discussed* it with her teacher.
+divide|divided|divided|ভাগ করা|➗|Please *divide* the cake.|He *divided* the money equally.|She has *divided* the class into groups.
+dive|dived|dived|ডুব দেওয়া|🤿|Kids *dive* into the pool.|He *dived* from the rock.|She has *dived* in the sea.
+donate|donated|donated|দান করা|🎗️|We *donate* clothes to the poor.|She *donated* some money.|He has *donated* blood.
+doubt|doubted|doubted|সন্দেহ করা|🫤|I *doubt* his story.|She *doubted* the news.|He has *doubted* me.
+drag|dragged|dragged|টেনে নেওয়া|🛷|Please *drag* the box here.|He *dragged* the bag.|She has *dragged* the chair.
+dress|dressed|dressed|পোশাক পরা|👗|I *dress* quickly in the morning.|She *dressed* for the party.|He has *dressed* the baby.
+dry|dried|dried|শুকানো|👚|Please *dry* your hair.|She *dried* the clothes.|He has *dried* the dishes.
+earn|earned|earned|উপার্জন করা|💸|I *earn* money by teaching.|She *earned* a medal.|He has *earned* respect.
+edit|edited|edited|সম্পাদনা করা|🎞️|I *edit* videos.|She *edited* the essay.|He has *edited* the photo.
+empty|emptied|emptied|খালি করা|🫙|Please *empty* the bin.|He *emptied* the glass.|She has *emptied* her bag.
+enable|enabled|enabled|সক্ষম করা|🔛|This app will *enable* you to learn faster.|The update *enabled* new features.|She has *enabled* notifications.
+employ|employed|employed|নিয়োগ দেওয়া|🧑‍💼|Companies *employ* many people.|They *employed* a new manager.|She has *employed* two workers.
+encourage|encouraged|encouraged|উৎসাহ দেওয়া|🌻|Teachers *encourage* students.|He *encouraged* me to try.|She has *encouraged* us.
+entertain|entertained|entertained|বিনোদন দেওয়া|🎪|Clowns *entertain* children.|He *entertained* the guests.|She has *entertained* us all evening.
+erase|erased|erased|মুছে ফেলা|🧽|Please *erase* the board.|He *erased* the wrong word.|She has *erased* the file.
+examine|examined|examined|পরীক্ষা করা|🩺|Doctors *examine* patients.|He *examined* the map.|She has *examined* the results.
+exercise|exercised|exercised|ব্যায়াম করা|🧘|I *exercise* every morning.|She *exercised* for an hour.|He has *exercised* daily.
+exist|existed|existed|বিদ্যমান থাকা|🌐|Dinosaurs no longer *exist*.|Many languages *existed* long ago.|This rule has *existed* for years.
+expect|expected|expected|আশা করা|🔮|I *expect* good results.|She *expected* a call.|We have *expected* this for weeks.
+explore|explored|explored|অন্বেষণ করা|🧭|Kids *explore* the forest.|He *explored* the old town.|She has *explored* many countries.
+express|expressed|expressed|প্রকাশ করা|🎶|People *express* feelings through art.|She *expressed* her thanks.|He has *expressed* his opinion.
+face|faced|faced|মুখোমুখি হওয়া|🪞|We *face* many problems.|She *faced* the crowd.|He has *faced* a big challenge.
+fail|failed|failed|ব্যর্থ হওয়া / ফেল করা|📉|Don't *fail* the test.|He *failed* the exam.|She has *failed* twice.
+fasten|fastened|fastened|বাঁধা / আটকানো|📌|Please *fasten* your seat belt.|He *fastened* the button.|She has *fastened* the strap.
+fear|feared|feared|ভয় পাওয়া|😨|I *fear* the dark.|She *feared* the dog.|He has *feared* heights since childhood.
+feed|fed|fed|খাওয়ানো|🍼|I *feed* the birds every day.|She *fed* the baby.|He has *fed* the cat.
+fetch|fetched|fetched|নিয়ে আসা|🐕|Dogs *fetch* sticks.|He *fetched* some water.|She has *fetched* the mail.
+fish|fished|fished|মাছ ধরা|🎣|We *fish* in the river.|He *fished* all day.|She has *fished* here before.
+fit|fitted|fitted|ঠিকমতো লাগা|👖|This shirt will *fit* you.|The key *fitted* the lock.|The shoes have *fitted* well.
+flip|flipped|flipped|উল্টানো|🥞|I *flip* the pancake.|She *flipped* the coin.|He has *flipped* the page.
+float|floated|floated|ভাসা|🛟|Wood can *float* on water.|The boat *floated* down the river.|The leaf has *floated* away.
+flow|flowed|flowed|প্রবাহিত হওয়া|🌊|Rivers *flow* to the sea.|The water *flowed* fast.|The stream has *flowed* all year.
+fold|folded|folded|ভাঁজ করা|📃|Please *fold* the paper.|She *folded* the clothes.|He has *folded* the letter.
+force|forced|forced|বাধ্য করা|🦾|Don't *force* him to eat.|The rain *forced* us to stay.|They have *forced* the door open.
+freeze|froze|frozen|জমে যাওয়া|🧊|Water will *freeze* at zero degrees.|The lake *froze* last night.|The pipes have *frozen*.
+fry|fried|fried|ভাজা|🍟|I *fry* eggs for breakfast.|She *fried* some fish.|He has *fried* the rice.
+gain|gained|gained|অর্জন করা / বাড়া|💹|You *gain* skill with practice.|She *gained* experience.|He has *gained* confidence.
+gather|gathered|gathered|জড়ো করা|👨‍👩‍👧‍👦|People *gather* in the park.|They *gathered* around the fire.|She has *gathered* some leaves.
+glow|glowed|glowed|জ্বলজ্বল করা|🪔|Fireflies *glow* at night.|The lamp *glowed* softly.|Her face has *glowed* with joy.
+grab|grabbed|grabbed|খপ করে ধরা|🧤|Please *grab* your coat.|He *grabbed* the rope.|She has *grabbed* a snack.
+graduate|graduated|graduated|স্নাতক হওয়া|🎓|Students *graduate* after four years.|He *graduated* last year.|She has *graduated* from college.
+grin|grinned|grinned|দাঁত বের করে হাসা|😁|Kids *grin* when they win.|He *grinned* at me.|She has *grinned* all day.
+guard|guarded|guarded|পাহারা দেওয়া|💂|Soldiers *guard* the gate.|The dog *guarded* the house.|He has *guarded* the door all night.
+guide|guided|guided|পথ দেখানো|🚩|A map can *guide* you.|He *guided* the tourists.|She has *guided* many groups.
+hang|hung|hung|ঝোলানো|🖼️|I *hang* my coat on the hook.|She *hung* the picture.|He has *hung* the clothes outside.
+handle|handled|handled|সামলানো|🧰|Please *handle* the glass with care.|He *handled* the problem well.|She has *handled* it.
+harvest|harvested|harvested|ফসল তোলা|🌾|Farmers *harvest* rice in autumn.|They *harvested* the wheat.|We have *harvested* all the corn.
+heal|healed|healed|সেরে ওঠা|💚|Cuts *heal* with time.|The wound *healed* quickly.|Her wound has *healed*.
+heat|heated|heated|গরম করা|♨️|I *heat* milk in the morning.|She *heated* the soup.|He has *heated* the food.
+hesitate|hesitated|hesitated|ইতস্তত করা|😬|Don't *hesitate* to ask.|He *hesitated* before answering.|She has *hesitated* too long.
+hire|hired|hired|ভাড়া করা / নিয়োগ দেওয়া|🪪|Shops *hire* new staff in winter.|They *hired* a driver.|We have *hired* a tutor.
+hop|hopped|hopped|লাফিয়ে চলা|🐇|Rabbits *hop* in the field.|The bird *hopped* away.|He has *hopped* over the stone.
+hug|hugged|hugged|জড়িয়ে ধরা|🤗|I *hug* my mother.|She *hugged* her friend.|He has *hugged* his dog.
+hum|hummed|hummed|গুনগুন করা|🎵|I *hum* a tune while cooking.|She *hummed* softly.|He has *hummed* all morning.
+hunt|hunted|hunted|শিকার করা|🏹|Lions *hunt* at night.|The cat *hunted* a mouse.|They have *hunted* for hours.
+ignore|ignored|ignored|উপেক্ষা করা|🙉|Don't *ignore* the warning.|He *ignored* my message.|She has *ignored* the rules.
+imitate|imitated|imitated|অনুকরণ করা|🦜|Parrots *imitate* voices.|He *imitated* his teacher.|She has *imitated* the sound.
+impress|impressed|impressed|মুগ্ধ করা|😲|Good manners *impress* people.|Her speech *impressed* everyone.|He has *impressed* the teacher.
+inform|informed|informed|জানানো|ℹ️|Please *inform* me early.|She *informed* the police.|He has *informed* his boss.
+insist|insisted|insisted|জোর দেওয়া|‼️|I *insist* on paying.|She *insisted* on helping.|He has *insisted* on it.
+inspire|inspired|inspired|অনুপ্রাণিত করা|💫|Good books *inspire* us.|Her story *inspired* me.|He has *inspired* many students.
+interrupt|interrupted|interrupted|বাধা দেওয়া|⛔|Don't *interrupt* the teacher.|He *interrupted* my speech.|She has *interrupted* twice.
+introduce|introduced|introduced|পরিচয় করানো|🙋‍♀️|Let me *introduce* my friend.|She *introduced* herself.|He has *introduced* me to his team.
+invent|invented|invented|উদ্ভাবন করা|💡|Scientists *invent* new machines.|He *invented* a toy.|She has *invented* a game.
+iron|ironed|ironed|ইস্ত্রি করা|👔|I *iron* my shirt every morning.|She *ironed* the clothes.|He has *ironed* his uniform.
+jog|jogged|jogged|হালকা দৌড়ানো|🏃‍♀️|I *jog* in the park.|She *jogged* for half an hour.|He has *jogged* every morning.
+juggle|juggled|juggled|জাগলিং করা|🤹|Clowns *juggle* balls.|He *juggled* three oranges.|She has *juggled* work and study.
+kneel|knelt|knelt|হাঁটু গেড়ে বসা|🧎|People *kneel* to pray.|He *knelt* on the grass.|She has *knelt* beside the bed.
+knit|knitted|knitted|বুনন করা|🧶|My grandma likes to *knit*.|She *knitted* a scarf.|He has *knitted* a sweater.
+land|landed|landed|অবতরণ করা|🛩️|Planes *land* at the airport.|The bird *landed* on the roof.|The plane has *landed*.
+last|lasted|lasted|স্থায়ী হওয়া|⌛|The class will *last* an hour.|The movie *lasted* two hours.|The rain has *lasted* all day.
+lay|laid|laid|শুইয়ে রাখা / ডিম পাড়া|🥚|Hens *lay* eggs.|She *laid* the baby on the bed.|He has *laid* the cloth on the table.
+lean|leaned|leaned|হেলান দেওয়া|🪜|Don't *lean* on the wall.|He *leaned* on the fence.|She has *leaned* against the tree.
+leap|leaped|leaped|লাফ দেওয়া|🐸|Frogs *leap* high.|He *leaped* over the gap.|The cat has *leaped* onto the roof.
+lick|licked|licked|চাটা|👅|Cats *lick* their fur.|He *licked* the spoon.|The dog has *licked* the bowl.
+light|lit|lit|আলো জ্বালানো|🕯️|We *light* candles at night.|She *lit* a lamp.|He has *lit* the fire.
+lock|locked|locked|তালা দেওয়া|🔐|I *lock* the door at night.|She *locked* the car.|He has *locked* the gate.
+mail|mailed|mailed|ডাকযোগে পাঠানো|✉️|I *mail* letters on Monday.|She *mailed* the parcel.|He has *mailed* the form.
+manage|managed|managed|পরিচালনা করা|📁|I *manage* a small shop.|He *managed* the team well.|She has *managed* the office for years.
+march|marched|marched|কুচকাওয়াজ করা|🪖|Soldiers *march* in a line.|The band *marched* down the street.|They have *marched* ten miles.
+mark|marked|marked|চিহ্ন দেওয়া|🖊️|Teachers *mark* the exam papers.|He *marked* the date.|She has *marked* the answers.
+marry|married|married|বিয়ে করা|💍|They will *marry* next year.|She *married* in June.|They have *married* recently.
+match|matched|matched|মেলানো|🧦|This shirt will *match* your pants.|The colors *matched* well.|The socks have *matched*.
+matter|mattered|mattered|গুরুত্বপূর্ণ হওয়া|❗|Your health will *matter* most.|It *mattered* a lot to her.|Nothing has *mattered* more.
+measure|measured|measured|মাপা|📏|I *measure* the room.|She *measured* the cloth.|He has *measured* the length.
+melt|melted|melted|গলে যাওয়া|🍦|Ice will *melt* in the sun.|The butter *melted* quickly.|The snow has *melted*.
+mend|mended|mended|মেরামত করা|🪡|I *mend* my torn clothes.|She *mended* the shirt.|He has *mended* the fence.
+mention|mentioned|mentioned|উল্লেখ করা|🔖|Please *mention* your name.|He *mentioned* the problem.|She has *mentioned* it before.
+mistake|mistook|mistaken|ভুল করা|🙃|People often *mistake* sugar for salt.|He *mistook* me for my brother.|She has *mistaken* the date.
+multiply|multiplied|multiplied|গুণ করা|✖️|Students *multiply* numbers.|He *multiplied* two by three.|She has *multiplied* the numbers.
+nail|nailed|nailed|পেরেক মারা|🔨|Carpenters *nail* boards.|He *nailed* the sign to the wall.|She has *nailed* the shelf.
+nod|nodded|nodded|মাথা নাড়া|🙆|I *nod* when I agree.|She *nodded* and smiled.|He has *nodded* twice.
+note|noted|noted|লিখে রাখা|📓|Please *note* the date.|He *noted* the address.|She has *noted* every word.
+nurse|nursed|nursed|সেবা করা|🧑‍⚕️|Mothers *nurse* sick children.|She *nursed* her father.|He has *nursed* the puppy back to health.
+observe|observed|observed|পর্যবেক্ষণ করা|🔭|Scientists *observe* the stars.|She *observed* the birds.|He has *observed* the change.
+occur|occurred|occurred|ঘটা|⚡|Floods *occur* every year.|The accident *occurred* at noon.|A mistake has *occurred*.
+operate|operated|operated|চালানো / অস্ত্রোপচার করা|🕹️|I can *operate* this machine.|The doctor *operated* on him.|She has *operated* the crane.
+organize|organized|organized|গোছানো / আয়োজন করা|🗓️|I *organize* my desk every week.|She *organized* the event.|He has *organized* the files.
+overcome|overcame|overcome|অতিক্রম করা|🏔️|We can *overcome* any problem.|He *overcame* his fear.|She has *overcome* many difficulties.
+owe|owed|owed|ঋণী থাকা|💳|I *owe* him some money.|She *owed* her friend a gift.|He has *owed* me since last year.
+pack|packed|packed|গুছিয়ে নেওয়া|🧳|I *pack* my bag at night.|She *packed* her clothes.|He has *packed* his lunch.
+park|parked|parked|গাড়ি রাখা|🅿️|Please *park* here.|He *parked* the car outside.|She has *parked* the bike.
+pause|paused|paused|থামানো|⏸️|Please *pause* the video.|He *paused* for a moment.|She has *paused* the music.
+peel|peeled|peeled|খোসা ছাড়ানো|🍌|I *peel* an orange.|She *peeled* the potatoes.|He has *peeled* the apple.
+perform|performed|performed|পরিবেশন করা|🎻|Artists *perform* on stage.|She *performed* a song.|He has *performed* in many shows.
+pick|picked|picked|বাছাই করা / তোলা|🍎|I *pick* fruit from the tree.|She *picked* a red flower.|He has *picked* a good book.
+plant|planted|planted|রোপণ করা|🌳|We *plant* trees every year.|He *planted* a mango tree.|She has *planted* some flowers.
+point|pointed|pointed|ইঙ্গিত করা|👈|Please *point* to the correct answer.|He *pointed* at the sky.|She has *pointed* the way.
+polish|polished|polished|পালিশ করা|✨|I *polish* my shoes.|She *polished* the table.|He has *polished* the floor.
+pour|poured|poured|ঢালা|🫗|Please *pour* some water.|She *poured* the tea.|He has *poured* the juice.
+pray|prayed|prayed|প্রার্থনা করা|🕌|We *pray* every day.|He *prayed* for peace.|She has *prayed* for us.
+predict|predicted|predicted|ভবিষ্যদ্বাণী করা|🔮|Experts *predict* heavy rain.|He *predicted* the result.|She has *predicted* correctly.
+prefer|preferred|preferred|বেশি পছন্দ করা|⭐|I *prefer* tea to coffee.|She *preferred* the blue one.|He has *preferred* this place.
+press|pressed|pressed|চাপ দেওয়া|🔘|Please *press* the button.|He *pressed* the bell.|She has *pressed* the key.
+pretend|pretended|pretended|ভান করা|🥸|Kids *pretend* to be heroes.|He *pretended* to sleep.|She has *pretended* not to know.
+prevent|prevented|prevented|প্রতিরোধ করা|🚷|Vaccines *prevent* diseases.|He *prevented* the accident.|She has *prevented* a fight.
+print|printed|printed|ছাপানো|🖨️|I *print* my notes.|She *printed* ten pages.|He has *printed* the ticket.
+produce|produced|produced|উৎপাদন করা|🏭|Farms *produce* food.|The factory *produced* toys.|They have *produced* a film.
+prove|proved|proved|প্রমাণ করা|🧾|Facts *prove* the truth.|He *proved* his idea.|She has *proved* me wrong.
+provide|provided|provided|সরবরাহ করা|🍱|Schools *provide* books.|She *provided* some food.|They have *provided* free water.
+publish|published|published|প্রকাশ করা|📰|They *publish* books.|She *published* an article.|He has *published* a story.
+punish|punished|punished|শাস্তি দেওয়া|🚨|The judge will *punish* the thief.|He *punished* the naughty boy.|She has *punished* them.
+qualify|qualified|qualified|যোগ্য হওয়া|🎖️|You must *qualify* for the final.|She *qualified* for the finals.|He has *qualified* as a teacher.
+quarrel|quarreled|quarreled|ঝগড়া করা|⚔️|Siblings sometimes *quarrel*.|They *quarreled* over a toy.|She has *quarreled* with her friend.
+question|questioned|questioned|প্রশ্ন করা|❔|Police *question* the witness.|He *questioned* the plan.|She has *questioned* the answer.
+race|raced|raced|দৌড় প্রতিযোগিতা করা|🏎️|Kids *race* to the gate.|He *raced* to school.|She has *raced* in many contests.
+rain|rained|rained|বৃষ্টি হওয়া|🌧️|It may *rain* tonight.|It *rained* all day.|It has *rained* since morning.
+raise|raised|raised|তোলা / বাড়ানো|🙋‍♂️|Please *raise* your hand.|He *raised* the flag.|She has *raised* her voice.
+realize|realized|realized|উপলব্ধি করা|💡|I *realize* my mistake.|She *realized* the truth.|He has *realized* it.
+recognize|recognized|recognized|চেনা|🪪|I *recognize* that voice.|She *recognized* her old friend.|He has *recognized* me.
+record|recorded|recorded|রেকর্ড করা|🔴|I *record* my voice.|She *recorded* a song.|He has *recorded* the lesson.
+reduce|reduced|reduced|কমানো|📉|We should *reduce* waste.|They *reduced* the price.|She has *reduced* her speed.
+refuse|refused|refused|প্রত্যাখ্যান করা|🙅‍♂️|I *refuse* to give up.|He *refused* the offer.|She has *refused* help.
+regret|regretted|regretted|অনুতপ্ত হওয়া|😔|I *regret* my words.|He *regretted* his choice.|She has *regretted* it ever since.
+rely|relied|relied|ভরসা করা|🤝|You can *rely* on me.|She *relied* on her friend.|He has *relied* on his teacher.
+remain|remained|remained|থেকে যাওয়া|📍|Please *remain* seated.|He *remained* calm.|She has *remained* silent.
+rent|rented|rented|ভাড়া নেওয়া|🏢|We *rent* a small flat.|She *rented* a bike.|He has *rented* a car.
+repair|repaired|repaired|মেরামত করা|🛠️|He can *repair* radios.|She *repaired* the old clock.|They have *repaired* the road.
+replace|replaced|replaced|প্রতিস্থাপন করা|🔄|Please *replace* the battery.|He *replaced* the old tire.|She has *replaced* the bulb.
+rescue|rescued|rescued|উদ্ধার করা|🚒|Firefighters *rescue* people.|He *rescued* the kitten.|They have *rescued* the child.
+respect|respected|respected|সম্মান করা|🫡|We *respect* our elders.|She *respected* his choice.|He has *respected* the rules.
+retire|retired|retired|অবসর নেওয়া|🏖️|People *retire* at sixty.|He *retired* last year.|She has *retired* from work.
+reveal|revealed|revealed|প্রকাশ করা|🪄|Please *reveal* the answer.|He *revealed* the secret.|She has *revealed* the truth.
+roll|rolled|rolled|গড়ানো|🛞|Balls *roll* downhill.|The coin *rolled* away.|He has *rolled* the dough.
+rub|rubbed|rubbed|ঘষা|🧴|Please *rub* your hands together.|He *rubbed* his eyes.|She has *rubbed* the stain.
+rush|rushed|rushed|ছুটে যাওয়া|💨|Don't *rush* the work.|He *rushed* to the station.|She has *rushed* home.
+scare|scared|scared|ভয় দেখানো|👻|Loud noises *scare* babies.|The dog *scared* the cat.|You have *scared* me.
+scratch|scratched|scratched|আঁচড় দেওয়া|🐾|Cats *scratch* the sofa.|He *scratched* his head.|She has *scratched* the table.
+search|searched|searched|খোঁজা|🔍|I *search* for my keys.|She *searched* the room.|He has *searched* everywhere.
+seek|sought|sought|সন্ধান করা|🧐|People *seek* happiness.|He *sought* advice.|She has *sought* help.
+seem|seemed|seemed|মনে হওয়া|🤷‍♂️|You *seem* tired.|She *seemed* happy.|It has *seemed* easy so far.
+select|selected|selected|নির্বাচন করা|☑️|Please *select* one option.|He *selected* a blue pen.|She has *selected* a topic.
+sew|sewed|sewn|সেলাই করা|🧵|I *sew* buttons on shirts.|She *sewed* a dress.|He has *sewn* the bag.
+shake|shook|shaken|ঝাঁকানো|〰️|Please *shake* the bottle.|He *shook* his head.|She has *shaken* hands with him.
+shave|shaved|shaved|দাড়ি কামানো|🪒|Men *shave* in the morning.|He *shaved* his beard.|He has *shaved* this morning.
+shoot|shot|shot|গুলি করা / ছবি তোলা|📸|Photographers *shoot* in the morning.|He *shot* a photo of the lake.|She has *shot* a short film.
+shop|shopped|shopped|কেনাকাটা করা|🛍️|We *shop* on weekends.|She *shopped* for shoes.|He has *shopped* online.
+shrink|shrank|shrunk|সংকুচিত হওয়া|🤏|Wool can *shrink* in hot water.|The shirt *shrank* after washing.|The puddle has *shrunk*.
+sign|signed|signed|স্বাক্ষর করা|🖋️|Please *sign* here.|He *signed* the form.|She has *signed* the letter.
+slide|slid|slid|পিছলানো|🛝|Kids *slide* down the slope.|He *slid* on the ice.|She has *slid* the door open.
+slip|slipped|slipped|পিছলে যাওয়া|🍌|Be careful not to *slip*.|He *slipped* on the wet floor.|She has *slipped* on the stairs.
+smell|smelled|smelled|গন্ধ নেওয়া|👃|I *smell* fresh bread.|She *smelled* the flowers.|He has *smelled* smoke.
+solve|solved|solved|সমাধান করা|🧩|I *solve* math problems.|She *solved* the puzzle.|He has *solved* the case.
+sort|sorted|sorted|বাছাই করা|🗃️|Please *sort* the files.|He *sorted* the letters.|She has *sorted* the clothes.
+sound|sounded|sounded|শোনানো|🔊|Your idea will *sound* great.|It *sounded* like thunder.|The bell has *sounded*.
+spell|spelled|spelled|বানান করা|🔤|Can you *spell* your name?|She *spelled* the word correctly.|He has *spelled* it wrong.
+spill|spilled|spilled|ছলকে পড়া|🥛|Be careful not to *spill* the milk.|He *spilled* the tea.|She has *spilled* some water.
+spin|spun|spun|ঘোরানো|🌀|Wheels *spin* fast.|She *spun* the top.|He has *spun* the wheel.
+split|split|split|ভাগ করা / ফাটা|🪓|Let's *split* the bill.|He *split* the wood.|They have *split* the cake.
+spread|spread|spread|ছড়ানো|🧈|I *spread* butter on bread.|The news *spread* fast.|The fire has *spread*.
+squeeze|squeezed|squeezed|নিংড়ানো|🍋|I *squeeze* a lemon into water.|She *squeezed* the sponge.|He has *squeezed* the juice.
+stick|stuck|stuck|আটকানো|📎|Glue will *stick* the paper.|The door *stuck* shut.|He has *stuck* the stamp on the letter.
+stir|stirred|stirred|নাড়া|🥄|Please *stir* the soup.|She *stirred* the tea.|He has *stirred* the sauce.
+stretch|stretched|stretched|টান টান করা|🤸|I *stretch* every morning.|She *stretched* her arms.|He has *stretched* the rope.
+strike|struck|struck|আঘাত করা|⚡|Lightning can *strike* trees.|The clock *struck* twelve.|The ball has *struck* the window.
+succeed|succeeded|succeeded|সফল হওয়া|🏆|Hard work helps you *succeed*.|She *succeeded* in the test.|He has *succeeded* at last.
+suffer|suffered|suffered|কষ্ট পাওয়া|😣|Many people *suffer* from heat.|He *suffered* a long delay.|She has *suffered* a lot.
+suggest|suggested|suggested|পরামর্শ দেওয়া|💡|I *suggest* we leave early.|She *suggested* a plan.|He has *suggested* a good place.
+support|supported|supported|সমর্থন করা|🧱|Friends *support* each other.|He *supported* his team.|She has *supported* me always.
+surprise|surprised|surprised|অবাক করা|🎊|I *surprise* my mom on her birthday.|The news *surprised* everyone.|You have *surprised* me.
+survive|survived|survived|বেঁচে থাকা|🏕️|Plants need water to *survive*.|He *survived* the storm.|She has *survived* the winter.
+sweep|swept|swept|ঝাড়ু দেওয়া|🧹|I *sweep* the floor.|She *swept* the yard.|He has *swept* the room.
+swing|swung|swung|দোলা|🎠|Kids *swing* in the park.|He *swung* the bat.|She has *swung* the rope.
+tap|tapped|tapped|টোকা দেওয়া|👆|Please *tap* the screen.|He *tapped* on the door.|She has *tapped* the button.
+taste|tasted|tasted|স্বাদ নেওয়া|😋|Please *taste* the soup.|She *tasted* the cake.|He has *tasted* mango.
+tear|tore|torn|ছেঁড়া|📄|Don't *tear* the paper.|He *tore* the letter.|She has *torn* her shirt.
+tease|teased|teased|খ্যাপানো|😝|Don't *tease* your sister.|He *teased* me about my hair.|She has *teased* him all day.
+thank|thanked|thanked|ধন্যবাদ দেওয়া|🙏|I *thank* my teacher.|She *thanked* him for the gift.|He has *thanked* everyone.
+tickle|tickled|tickled|সুড়সুড়ি দেওয়া|🪶|I *tickle* my baby brother.|She *tickled* the child.|He has *tickled* my feet.
+tidy|tidied|tidied|গোছানো|🧼|Please *tidy* your room.|She *tidied* the desk.|He has *tidied* the kitchen.
+tie|tied|tied|বাঁধা|🎀|I *tie* my shoes.|She *tied* a ribbon.|He has *tied* the knot.
+tour|toured|toured|ভ্রমণ করা|🗼|We *tour* old cities.|She *toured* Europe.|He has *toured* the museum.
+trade|traded|traded|ব্যবসা করা / বিনিময় করা|🔁|Merchants *trade* goods.|He *traded* his old phone.|They have *traded* cards.
+train|trained|trained|প্রশিক্ষণ দেওয়া|🚆|Coaches *train* the players.|She *trained* for the race.|He has *trained* every day.
+translate|translated|translated|অনুবাদ করা|🌐|I *translate* English into Bangla.|She *translated* the story.|He has *translated* the book.
+treat|treated|treated|চিকিৎসা করা / আচরণ করা|🩺|Doctors *treat* patients.|He *treated* us kindly.|She has *treated* the wound.
+trip|tripped|tripped|হোঁচট খাওয়া|🪨|Be careful not to *trip*.|He *tripped* over a stone.|She has *tripped* on the stairs.
+trust|trusted|trusted|বিশ্বাস করা|🫱|I *trust* my friends.|She *trusted* him.|He has *trusted* me.
+twist|twisted|twisted|মোচড়ানো|🥨|Please *twist* the cap.|He *twisted* his ankle.|She has *twisted* the wire.
+undo|undid|undone|খুলে ফেলা / বাতিল করা|↩️|Please *undo* the knot.|He *undid* the button.|She has *undone* the changes.
+unite|united|united|ঐক্যবদ্ধ করা|🧑‍🤝‍🧑|People *unite* for a good cause.|The team *united* after the match.|They have *united* the villages.
+unlock|unlocked|unlocked|তালা খোলা|🔓|I *unlock* the door with a key.|She *unlocked* the phone.|He has *unlocked* the gate.
+unpack|unpacked|unpacked|বাক্স খোলা / গুছিয়ে রাখা|📦|I *unpack* my bag after a trip.|She *unpacked* the boxes.|He has *unpacked* his clothes.
+upload|uploaded|uploaded|আপলোড করা|☁️|I *upload* photos online.|She *uploaded* the video.|He has *uploaded* the file.
+value|valued|valued|মূল্য দেওয়া|💎|We *value* honesty.|He *valued* her advice.|She has *valued* the gift.
+vanish|vanished|vanished|মিলিয়ে যাওয়া|🌫️|Clouds *vanish* in the sun.|The cat *vanished* quickly.|The snow has *vanished*.
+vary|varied|varied|ভিন্ন হওয়া|🎨|Prices *vary* from shop to shop.|Her mood *varied* each day.|The results have *varied*.
+view|viewed|viewed|দেখা / পর্যবেক্ষণ করা|🏞️|We *view* the hills from here.|She *viewed* the photos.|He has *viewed* the page.
+volunteer|volunteered|volunteered|স্বেচ্ছায় কাজ করা|🙋‍♀️|I *volunteer* at a school.|She *volunteered* to help.|He has *volunteered* for the job.
+wander|wandered|wandered|ঘুরে বেড়ানো|🚶‍♀️|Kids *wander* in the park.|He *wandered* around the town.|She has *wandered* far.
+warm|warmed|warmed|গরম করা|🔥|Please *warm* the milk.|She *warmed* her hands.|He has *warmed* the room.
+warn|warned|warned|সতর্ক করা|⚠️|Signs *warn* drivers.|He *warned* us about the storm.|She has *warned* me twice.
+waste|wasted|wasted|অপচয় করা|🚯|Don't *waste* water.|He *wasted* his time.|She has *wasted* food.
+wave|waved|waved|হাত নাড়ানো|👋|We *wave* to our friends.|She *waved* goodbye.|He has *waved* from the train.
+weave|wove|woven|বোনা|🧶|Spiders *weave* webs.|She *wove* a basket.|He has *woven* a mat.
+weep|wept|wept|কাঁদা|😭|Children *weep* when they are sad.|She *wept* with joy.|He has *wept* quietly.
+weigh|weighed|weighed|ওজন করা|⚖️|I *weigh* the apples.|She *weighed* the bag.|He has *weighed* the rice.
+welcome|welcomed|welcomed|স্বাগত জানানো|🎊|We *welcome* guests warmly.|She *welcomed* us at the door.|He has *welcomed* everyone.
+whisper|whispered|whispered|ফিসফিস করা|🤫|Please *whisper* in the library.|She *whispered* a secret.|He has *whispered* to me.
+whistle|whistled|whistled|শিস দেওয়া|😗|I *whistle* when I am happy.|He *whistled* a tune.|She has *whistled* all morning.
+wind|wound|wound|পেঁচানো / দম দেওয়া|⏱️|I *wind* the clock every week.|He *wound* the rope around the pole.|She has *wound* the thread.
+wink|winked|winked|চোখ টিপ দেওয়া|😉|I *wink* at my friend.|She *winked* at me.|He has *winked* twice.
+wipe|wiped|wiped|মোছা|🧽|Please *wipe* the table.|She *wiped* the board.|He has *wiped* his hands.
+wrap|wrapped|wrapped|মোড়ানো|🎁|I *wrap* gifts in paper.|She *wrapped* the box.|He has *wrapped* the present.
+yawn|yawned|yawned|হাই তোলা|🥱|I *yawn* when I am sleepy.|She *yawned* in class.|He has *yawned* all morning.
+yield|yielded|yielded|ফলন দেওয়া|🌽|Fields *yield* rice.|The tree *yielded* many mangoes.|The farm has *yielded* a good crop.
+zip|zipped|zipped|চেইন আটকানো|🤐|Please *zip* your bag.|She *zipped* her jacket.|He has *zipped* the file.
+zoom|zoomed|zoomed|জুম করা / ছুটে যাওয়া|🔎|Please *zoom* in on the picture.|The car *zoomed* past us.|He has *zoomed* in on the map.
+post|posted|posted|ডাকে পাঠানো / পোস্ট করা|📮|I *post* a letter every month.|She *posted* the parcel.|He has *posted* the card.
+`;
+
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const VERBS = RAW.trim().split("\n").map(l => {
+  const [v1, v2, v3, bn, emoji, s1, s2, s3] = l.split("|");
+  return { v1, v2, v3, bn, emoji, ex: [["Present", s1], ["Past", s2], ["Present perfect", s3]] };
+}).sort((a, b) => a.v1.localeCompare(b.v1)).map((v, i) => ({ ...v, n: i + 1 }));
+
+const STEP = 60;
+const state = { q: "", letter: "", shown: STEP };
+const $ = id => document.getElementById(id);
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function sentence(src) {
+  const p = el("p");
+  src.split(/\*([^*]+)\*/).forEach((part, i) => {
+    if (i % 2) p.appendChild(el("mark", "", part));
+    else if (part) p.appendChild(document.createTextNode(part));
+  });
+  return p;
+}
+
+function card(v) {
+  const c = el("article", "card");
+  c.appendChild(el("div", "tile", v.emoji)).setAttribute("aria-hidden", "true");
+  const head = el("div", "head");
+  head.append(el("h2", "", cap(v.v1)), el("span", "num", "#" + v.n));
+  c.append(head, el("p", "bn", v.bn));
+  const forms = el("div", "forms");
+  [["V1", v.v1], ["V2", v.v2], ["V3", v.v3]].forEach(([k, w]) => {
+    const s = el("span");
+    s.append(el("b", "", k), document.createTextNode(cap(w)));
+    forms.appendChild(s);
+  });
+  c.appendChild(forms);
+  const ul = el("ul", "ex");
+  v.ex.forEach(([label, text]) => {
+    const li = el("li");
+    li.append(el("small", "", label), sentence(text));
+    ul.appendChild(li);
+  });
+  c.appendChild(ul);
+  return c;
+}
+
+function matches() {
+  const q = state.q.trim().toLowerCase();
+  return VERBS.filter(v => {
+    if (state.letter && v.v1[0].toUpperCase() !== state.letter) return false;
+    if (!q) return true;
+    return [v.v1, v.v2, v.v3].some(w => w.toLowerCase().includes(q)) || v.bn.includes(state.q.trim());
+  });
+}
+
+function render() {
+  const list = matches();
+  const visible = list.slice(0, state.shown);
+  const grid = $("grid");
+  grid.replaceChildren(...visible.map(card));
+  if (!list.length) grid.appendChild(el("p", "empty", "No verbs match your search. Try another word or letter."));
+  $("count").textContent = visible.length + " of " + VERBS.length + " verbs" + (list.length !== VERBS.length ? " (" + list.length + " found)" : "");
+  const more = $("more");
+  more.hidden = visible.length >= list.length;
+  more.textContent = "Show more verbs (" + (list.length - visible.length) + " left)";
+}
+
+function buildLetters() {
+  const have = new Set(VERBS.map(v => v.v1[0].toUpperCase()));
+  const box = $("letters");
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(L => {
+    const b = el("button", "", L);
+    b.type = "button";
+    b.disabled = !have.has(L);
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => {
+      state.letter = state.letter === L ? "" : L;
+      state.shown = STEP;
+      box.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x.textContent === state.letter)));
+      render();
+    });
+    box.appendChild(b);
+  });
+}
+
+$("q").addEventListener("input", e => { state.q = e.target.value; state.shown = STEP; render(); });
+$("more").addEventListener("click", () => { state.shown += STEP; render(); });
+buildLetters();
+render();
+</script>
+
+</body></html>
